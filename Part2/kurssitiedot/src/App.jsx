@@ -25,11 +25,15 @@ const Content = (props) => {
   );
 }
 
-const Total = (props) => {
+const Total = ({course}) => {
+
+  const initialValue = 0;
+  const total = course.map((c) => c.exercises).reduce( (s, p) => s + p,initialValue)
+  
   return (
     <>
       <h3>
-        Number of exercises {props.course.parts[0].exercises + props.course.parts[1].exercises + props.course.parts[2].exercises + props.course.parts[3].exercises}
+        Number of exercises {total}
       </h3>
     </>
   );
@@ -40,7 +44,7 @@ const Course = ({course}) => {
     <div>
       <Header course={course.name} />
       <Content course={course} />
-      <Total course={course} />
+      <Total course={course.parts} />
     </div>
   );
 }
