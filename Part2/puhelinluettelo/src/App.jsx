@@ -8,10 +8,10 @@ const Contact = ({person}) =>{
   )
 }
 
-const Contacts = ({persons}) =>{
+const Contacts = ({persons,newFilter}) =>{
   return (
     <>
-      {persons.map((person, i)=> 
+      {persons.filter((p)=>p.name.includes(newFilter)).map((person, i)=> 
         <Contact key={person+i} person={person}/>
       )}
     </>
@@ -20,10 +20,15 @@ const Contacts = ({persons}) =>{
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number:"040-1231244" }
-  ]) 
+    { name: 'Arto Hellas', number: '040-123456' },
+    { name: 'Ada Lovelace', number: '39-44-5323523' },
+    { name: 'Dan Abramov', number: '12-43-234345' },
+    { name: 'Mary Poppendieck', number: '39-23-6423122' }
+  ])
+
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
+  const [newFilter, setNewFilter] = useState('')
 
   const chngeName = (event) => {
     let name = event.target.value
@@ -33,6 +38,11 @@ const App = () => {
   const chngeNumber = (event) => {
     let number = event.target.value
     setNewNumber(number)
+  }
+
+  const chngeFilter = (event) => {
+    let filterValue = event.target.value
+    setNewFilter(filterValue)
   }
 
   const handleSubmit = (event) =>{
@@ -55,7 +65,13 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <div>
+          filter shown with: <input value={newFilter} onChange={(e)=> chngeFilter(e)}/>
+        </div>
       <form>
+        <div>
+          <h2>add new</h2>
+        </div>
         <div>
           name: <input value={newName} onChange={(e)=> chngeName(e)}/>
         </div>
@@ -67,7 +83,7 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      <Contacts persons={persons}/>
+      <Contacts persons={persons} newFilter={newFilter}/>
     </div>
   )
 
