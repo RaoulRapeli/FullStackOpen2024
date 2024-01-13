@@ -31,9 +31,18 @@ const App = () => {
 
   const handleSubmit = (event) =>{
     event.preventDefault()
-    let newPerson = persons.concat({name:newName})
-    setPersons(newPerson)
-    setNewName("")
+
+    let findPerson = persons.find((person) => person.name === newName)
+ 
+    if(findPerson===undefined){
+      let newPerson = persons.concat({name:newName})
+      setPersons(newPerson)
+      setNewName("")
+    }
+    else{
+      alert(`${newName} is already added to phonebook`)
+    }
+    
   }
 
   return (
