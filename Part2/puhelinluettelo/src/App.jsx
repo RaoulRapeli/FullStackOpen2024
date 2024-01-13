@@ -11,9 +11,39 @@ const Contact = ({person}) =>{
 const Contacts = ({persons,newFilter}) =>{
   return (
     <>
-      {persons.filter((p)=>p.name.includes(newFilter)).map((person, i)=> 
+      {persons.filter((p)=>p.name.toLowerCase().includes(newFilter.toLowerCase())).map((person, i)=> 
         <Contact key={person+i} person={person}/>
       )}
+    </>
+  )
+}
+
+const Filter = ({newFilter,chngeFilter}) =>{
+
+  return (
+    <>
+      <input value={newFilter} onChange={chngeFilter}/>
+    </>
+  )
+}
+
+const PersonsForm = ({newName, newNumber, chngeName, chngeNumber, handleSubmit}) =>{
+  return (
+    <>
+      <form>
+        <div>
+          <h2>add new</h2>
+        </div>
+        <div>
+          name: <input value={newName} onChange={(e)=> chngeName(e)}/>
+        </div>
+        <div>
+          number: <input value={newNumber} onChange={(e)=> chngeNumber(e)}/>
+        </div>
+        <div>
+          <button type="submit" onClick={(e)=> handleSubmit(e)}>add</button>
+        </div>
+      </form>
     </>
   )
 }
@@ -49,7 +79,6 @@ const App = () => {
     event.preventDefault()
 
     let findPerson = persons.find((person) => person.name === newName)
- 
     if(findPerson===undefined){
       let newPerson = persons.concat({name:newName,number:newNumber})
       setPersons(newPerson)
@@ -66,22 +95,9 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <div>
-          filter shown with: <input value={newFilter} onChange={(e)=> chngeFilter(e)}/>
-        </div>
-      <form>
-        <div>
-          <h2>add new</h2>
-        </div>
-        <div>
-          name: <input value={newName} onChange={(e)=> chngeName(e)}/>
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={(e)=> chngeNumber(e)}/>
-        </div>
-        <div>
-          <button type="submit" onClick={(e)=> handleSubmit(e)}>add</button>
-        </div>
-      </form>
+          filter shown with: <Filter newFilter={newFilter} chngeFilter={(e) => chngeFilter(e)}/>
+      </div>
+      <PersonsForm {...{newName,newNumber,chngeName,chngeNumber,handleSubmit}}/>
       <h2>Numbers</h2>
       <Contacts persons={persons} newFilter={newFilter}/>
     </div>
