@@ -10,7 +10,7 @@ const Header = ({header}) => {
   )
 }
 
-const StatisticsData = ({text,value}) => {
+const StatisticLine  = ({text,value}) => {
   return (
     <div>
       {text} {value}
@@ -33,12 +33,12 @@ const Statistics = ({good, neutral, bad}) => {
         <>
           {total !== 0?
           <>
-            <StatisticsData text="good" value={good}/>
-            <StatisticsData text="neutral" value={neutral}/>
-            <StatisticsData text="bad" value={bad}/>
-            <StatisticsData text="total" value={total}/>
-            <StatisticsData text="average" value={average}/>
-            <StatisticsData text="positive" value={positive + " %"}/>
+            <StatisticLine  text="good" value={good}/>
+            <StatisticLine  text="neutral" value={neutral}/>
+            <StatisticLine  text="bad" value={bad}/>
+            <StatisticLine  text="total" value={total}/>
+            <StatisticLine  text="average" value={average}/>
+            <StatisticLine  text="positive" value={positive + " %"}/>
           </>
           :  
           <>
