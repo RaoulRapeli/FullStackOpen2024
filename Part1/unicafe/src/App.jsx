@@ -10,9 +10,20 @@ const Header = ({header}) => {
   )
 }
 
+const StatisticsData = ({text,value}) => {
+  return (
+    <div>
+      {text} {value}
+    </div>
+  )
+}
+
 const Statistics = ({good, neutral, bad}) => {
   // tallenna napit omaan tilaansa
   const header = "statistics"
+  const total = good+neutral+bad
+  const average = (((good*1) + (neutral * 0) + (bad * -1))/total)
+  const positive = (good/total)*100
   return (
     <div>
       <h2>
@@ -22,15 +33,10 @@ const Statistics = ({good, neutral, bad}) => {
         <StatisticsData text="good" value={good}/>
         <StatisticsData text="neutral" value={neutral}/>
         <StatisticsData text="bad" value={bad}/>
+        <StatisticsData text="total" value={total}/>
+        <StatisticsData text="average" value={average}/>
+        <StatisticsData text="positive" value={positive + " %"}/>
       </div>
-    </div>
-  )
-}
-
-const StatisticsData = ({text,value}) => {
-  return (
-    <div>
-      {text} {value}
     </div>
   )
 }
