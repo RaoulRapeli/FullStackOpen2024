@@ -30,12 +30,22 @@ const Statistics = ({good, neutral, bad}) => {
         <Header header={header}/>
       </h2>
       <div>
-        <StatisticsData text="good" value={good}/>
-        <StatisticsData text="neutral" value={neutral}/>
-        <StatisticsData text="bad" value={bad}/>
-        <StatisticsData text="total" value={total}/>
-        <StatisticsData text="average" value={average}/>
-        <StatisticsData text="positive" value={positive + " %"}/>
+        <>
+          {total !== 0?
+          <>
+            <StatisticsData text="good" value={good}/>
+            <StatisticsData text="neutral" value={neutral}/>
+            <StatisticsData text="bad" value={bad}/>
+            <StatisticsData text="total" value={total}/>
+            <StatisticsData text="average" value={average}/>
+            <StatisticsData text="positive" value={positive + " %"}/>
+          </>
+          :  
+          <>
+            No feedback given
+          </>
+        }
+        </>
       </div>
     </div>
   )
