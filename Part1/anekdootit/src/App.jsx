@@ -1,5 +1,29 @@
 import { useState } from 'react'
 
+const AnecdoteWithMostVotes = ({text,amountOfVotes}) => {
+  return(
+    <div>
+      <h2>
+        Anecdote with most votes
+      </h2>
+      <>
+        {amountOfVotes!==0?
+          <>
+            <div>
+              {text}
+            </div>
+            <div>
+              has {amountOfVotes} votes
+            </div>
+          </>
+          :
+          null
+        }
+      </>
+    </div>
+  )
+}
+
 const Button = ({text,handleClick}) => {
   return(
     <button onClick={handleClick}>{text}</button>
@@ -20,12 +44,21 @@ const App = () => {
    
   const [selected, setSelected] = useState(0)
   const [points, setPoints] = useState(anecdotes.map(() => {return 0}))
+  const [anecdoteWithMostVotes, setAnecdoteWithMostVotes] = useState()
+  const [mostVotes, setMostVotes] = useState(0)
 
+  // console.log(mostVotes)
   const vote = () => {
     const copy = { ...points }
     copy[selected] += 1  
     let newValue = copy
     setPoints(newValue)
+
+    let voteValues = Object.values(newValue);
+    let largestVoteValue = Math.max(...voteValues.map((value) => value))
+    let newVoteValue = voteValues.indexOf(largestVoteValue)
+    setMostVotes(largestVoteValue)
+    setAnecdoteWithMostVotes(newVoteValue)
   }
 
   const nextAnecdote = () => {
@@ -33,6 +66,8 @@ const App = () => {
     * ((anecdotes.length-1) - 0 + 1)) + 0;
     setSelected(newValue)
   }
+
+  
 
   return (
     <div>
@@ -43,6 +78,9 @@ const App = () => {
       <div>
         <Button text="next anecdote" handleClick={() => nextAnecdote()} />
         <Button text="vote" handleClick={() => vote()} />
+      </div>
+      <div>
+        <AnecdoteWithMostVotes text={anecdotes[anecdoteWithMostVotes]} amountOfVotes={mostVotes}/>
       </div>
     </div>
   )
