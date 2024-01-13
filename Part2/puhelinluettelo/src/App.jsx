@@ -3,7 +3,7 @@ import { useState } from 'react'
 const Contact = ({person}) =>{
   return(
     <div>
-      {person.name}
+      {person.name} {person.number}
     </div>
   )
 }
@@ -20,13 +20,19 @@ const Contacts = ({persons}) =>{
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: 'Arto Hellas' }
+    { name: 'Arto Hellas', number:"040-1231244" }
   ]) 
   const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
 
   const chngeName = (event) => {
     let name = event.target.value
     setNewName(name)
+  }
+
+  const chngeNumber = (event) => {
+    let number = event.target.value
+    setNewNumber(number)
   }
 
   const handleSubmit = (event) =>{
@@ -35,9 +41,10 @@ const App = () => {
     let findPerson = persons.find((person) => person.name === newName)
  
     if(findPerson===undefined){
-      let newPerson = persons.concat({name:newName})
+      let newPerson = persons.concat({name:newName,number:newNumber})
       setPersons(newPerson)
       setNewName("")
+      setNewNumber("")
     }
     else{
       alert(`${newName} is already added to phonebook`)
@@ -51,6 +58,9 @@ const App = () => {
       <form>
         <div>
           name: <input value={newName} onChange={(e)=> chngeName(e)}/>
+        </div>
+        <div>
+          number: <input value={newNumber} onChange={(e)=> chngeNumber(e)}/>
         </div>
         <div>
           <button type="submit" onClick={(e)=> handleSubmit(e)}>add</button>
