@@ -2,19 +2,19 @@ import { useState } from 'react'
 import { useEffect } from 'react'
 import phoneServices from "./services/callFunktions"
 
-const Contact = ({person}) =>{
+const Contact = ({person,handleDelete}) =>{
   return(
     <div>
-      {person.name} {person.number}
+      {person.name} {person.number} <button onClick={() => handleDelete(person.id,person.name)} >delete</button>
     </div>
   )
 }
 
-const Contacts = ({persons,newFilter}) =>{
+const Contacts = ({persons,newFilter,handleDelete}) =>{
   return (
     <>
       {persons.filter((p)=>p.name.toLowerCase().includes(newFilter.toLowerCase())).map((person, i)=> 
-        <Contact key={person+i} person={person}/>
+        <Contact key={person+i} person={person} handleDelete={handleDelete}/>
       )}
     </>
   )
@@ -87,8 +87,8 @@ const App = () => {
 
     let findPerson = persons.find((person) => person.name === newName)
     if(findPerson===undefined){
-      let newPerson = persons.concat({name:newName,number:newNumber})
       phoneServices.create({name:newName,number:newNumber}).then(response => {
+        let newPerson = persons.concat(response)
         setPersons(newPerson)
         setNewName("")
         setNewNumber("")
@@ -101,6 +101,15 @@ const App = () => {
     
   }
 
+  const handleDelete = (id,personName) => {
+    if (window.confirm(`Delete  ${personName} ?`)) {
+      phoneServices.removeContact(id).then(response => {
+        let removePerson = persons.filter((person) => person.id !== id)
+        setPersons(removePerson)
+      })
+    }
+  }
+  
   return (
     <div>
       <h2>Phonebook</h2>
@@ -109,7 +118,7 @@ const App = () => {
       </div>
       <PersonsForm {...{newName,newNumber,chngeName,chngeNumber,handleSubmit}}/>
       <h2>Numbers</h2>
-      <Contacts persons={persons} newFilter={newFilter}/>
+      <Contacts {...{persons, newFilter, handleDelete}}/>
     </div>
   )
 }
