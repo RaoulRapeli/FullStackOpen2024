@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useEffect } from 'react'
 import phoneServices from "./services/callFunktions"
+import "./style.css"
 
 const Contact = ({person,handleDelete}) =>{
   return(
@@ -50,9 +51,22 @@ const PersonsForm = ({newName, newNumber, chngeName, chngeNumber, handleSubmit})
   )
 }
 
+const Notification = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className="error">
+      {message}
+    </div>
+  )
+}
+
 const App = () => {
 
   const [persons, setPersons] = useState([])
+  const [message, setMessage] = useState()
 
   useEffect(() => {
     phoneServices
@@ -92,6 +106,7 @@ const App = () => {
         setPersons(newPerson)
         setNewName("")
         setNewNumber("")
+        handleMessage(`Added ${newName}`)
       })
      
     }
@@ -101,6 +116,7 @@ const App = () => {
           setPersons(persons.map(person => person.id !== findPerson.id ? person : response))
           setNewName("")
           setNewNumber("")
+          handleMessage(`Updated ${newName} phone number`)
         })
       }
     }
@@ -112,13 +128,26 @@ const App = () => {
       phoneServices.removeContact(id).then(response => {
         let removePerson = persons.filter((person) => person.id !== id)
         setPersons(removePerson)
+        handleMessage(`Deleted ${personName}`)
       })
     }
   }
   
+  const handleMessage = (message) => {
+    setMessage(message)
+    setTimeout(() => {
+      setMessage(null)
+    }, 2000)
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
+      {message?
+        <Notification message={message} />
+        :
+        null
+      }
       <div>
           filter shown with: <Filter newFilter={newFilter} chngeFilter={(e) => chngeFilter(e)}/>
       </div>
