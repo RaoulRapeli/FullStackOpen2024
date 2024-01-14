@@ -96,7 +96,13 @@ const App = () => {
      
     }
     else{
-      alert(`${newName} is already added to phonebook`)
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with new one ?`)) {
+        phoneServices.update(findPerson.id,{number:newNumber, name:findPerson.name}).then(response => {
+          setPersons(persons.map(person => person.id !== findPerson.id ? person : response))
+          setNewName("")
+          setNewNumber("")
+        })
+      }
     }
     
   }
