@@ -14,6 +14,42 @@ const Languages = ({languages}) =>{
   )
 }
 
+const Weather = ({country}) =>{
+  
+  const [weather, setWeather] = useState(null)
+
+  useEffect(() => {
+    countryServices
+    .getWetherInfo(country.capital[0])
+      .then(response => {
+        console.log(response)
+        setWeather(response)
+      })
+  }, [country])
+
+  return (
+    <div>
+      <>
+        {weather!==null?
+          <>
+            <h1>Weather in: {country.capital[0]}</h1>
+            <div>
+              temperature: {(weather.main.temp-273.15).toFixed(2)} Celcius
+            </div>
+            <div>
+                <img src={"http://openweathermap.org/img/wn/"+weather.weather[0].icon+"@2x.png"} alt='weather'/>
+            </div>
+            <div>wind {weather.wind.speed} m/s</div>
+          </> 
+          :
+          null
+        }
+      </>
+    </div>
+  )
+
+}
+
 const CountrySpecifics = ({country}) =>{
 
   return (
@@ -27,6 +63,9 @@ const CountrySpecifics = ({country}) =>{
       </div>
       <div>
         <img src={country.flags["png"]} alt="flag" />
+      </div>
+      <div>
+        <Weather {...{country}}/>
       </div>
     </div>
   )
