@@ -33,11 +33,11 @@ const CountrySpecifics = ({country}) =>{
 }
  
 
-const Country = ({country,getSpecific}) =>{
+const Country = ({country,getSpecific,handleShow}) =>{
   return(
     <div>
       {getSpecific!==true?
-        <>{country.name.common}</>
+        <>{country.name.common} <button onClick={() => handleShow(country.name.common)}>show</button></>
         :
         <div>
           <CountrySpecifics {...{country}}/>
@@ -47,7 +47,7 @@ const Country = ({country,getSpecific}) =>{
   )
 }
 
-const Countires = ({countries}) =>{
+const Countires = ({countries,handleShow}) =>{
   return (
     <>
       {countries.length<=10?
@@ -55,7 +55,7 @@ const Countires = ({countries}) =>{
           {countries.length>1?
             <>
               {countries.map((country, i)=> 
-                <Country key={country+i} country={country} getSpecific={false}/>
+                <Country key={country+i} country={country} getSpecific={false} handleShow={handleShow}/>
               )}
             </>
             :
@@ -113,6 +113,10 @@ const App = () => {
     setNewFilter(filterValue)
   }
 
+  const handleShow = (countryName) =>{
+    setNewFilter(countryName)
+  }
+
   return (
     <div>
       {countries.length!==0?
@@ -122,7 +126,7 @@ const App = () => {
           </div>
           <>
             {filteredCountries!==undefined?
-              <Countires countries={filteredCountries}/>
+              <Countires countries={filteredCountries} handleShow={handleShow}/>
               :
               null
             }
