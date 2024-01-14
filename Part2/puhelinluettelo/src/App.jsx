@@ -51,13 +51,25 @@ const PersonsForm = ({newName, newNumber, chngeName, chngeNumber, handleSubmit})
   )
 }
 
-const Notification = ({ message }) => {
+const Notification = ({ message, messageType}) => {
   if (message === null) {
     return null
   }
+  const getMessageStyle = () => {
+    switch(messageType) {
+      case 'Sucess':
+        return {color:"green"};
+      case 'Error':
+        return {color:"red"};
+      default:
+        return {color:"orange"};
+    }
+  }
+  
+  const messageStyle = getMessageStyle()
 
   return (
-    <div className="error">
+    <div className="error" style={messageStyle}>
       {message}
     </div>
   )
@@ -67,6 +79,7 @@ const App = () => {
 
   const [persons, setPersons] = useState([])
   const [message, setMessage] = useState()
+  const [messageType, setMessageType] = useState("")
 
   useEffect(() => {
     phoneServices
@@ -101,22 +114,30 @@ const App = () => {
 
     let findPerson = persons.find((person) => person.name === newName)
     if(findPerson===undefined){
-      phoneServices.create({name:newName,number:newNumber}).then(response => {
+      phoneServices.create({name:newName,number:newNumber})
+      .then(response => {
         let newPerson = persons.concat(response)
         setPersons(newPerson)
         setNewName("")
         setNewNumber("")
-        handleMessage(`Added ${newName}`)
+        handleMessage(`Added ${newName}`,"Sucess")
+      })
+      .catch((reason) => {
+        handleMessage(`${newName} was not successfuly added to server`,"Error")
       })
      
     }
     else{
       if (window.confirm(`${newName} is already added to phonebook, replace the old number with new one ?`)) {
-        phoneServices.update(findPerson.id,{number:newNumber, name:findPerson.name}).then(response => {
+        phoneServices.update(findPerson.id,{number:newNumber, name:findPerson.name})
+        .then(response => {
           setPersons(persons.map(person => person.id !== findPerson.id ? person : response))
           setNewName("")
           setNewNumber("")
-          handleMessage(`Updated ${newName} phone number`)
+          handleMessage(`Updated ${newName} phone number`,"Sucess")
+        })
+        .catch((reason) => {
+          handleMessage(`Information of ${newName} has alredy been removed from server`,"Error")
         })
       }
     }
@@ -125,16 +146,21 @@ const App = () => {
 
   const handleDelete = (id,personName) => {
     if (window.confirm(`Delete  ${personName} ?`)) {
-      phoneServices.removeContact(id).then(response => {
+      phoneServices.removeContact(id)
+      .then(response => {
         let removePerson = persons.filter((person) => person.id !== id)
         setPersons(removePerson)
-        handleMessage(`Deleted ${personName}`)
+        handleMessage(`Deleted ${personName}`,"Sucess")
+      })
+      .catch((reason) => {
+        handleMessage(`Information of ${personName} has alredy been removed from server`,"Error")
       })
     }
   }
   
-  const handleMessage = (message) => {
+  const handleMessage = (message,type) => {
     setMessage(message)
+    setMessageType(type)
     setTimeout(() => {
       setMessage(null)
     }, 2000)
@@ -144,7 +170,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       {message?
-        <Notification message={message} />
+        <Notification message={message} messageType={messageType}/>
         :
         null
       }
