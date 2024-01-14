@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useEffect } from 'react'
-import axios from 'axios'
+import phoneServices from "./services/callFunktions"
 
 const Contact = ({person}) =>{
   return(
@@ -54,15 +54,13 @@ const App = () => {
 
   const [persons, setPersons] = useState([])
 
-  const hook = () => {
-    axios
-      .get('http://localhost:3001/persons')
+  useEffect(() => {
+    phoneServices
+    .getAll()
       .then(response => {
-        setPersons(response.data)
+        setPersons(response)
       })
-  }
-  
-  useEffect(hook, [])
+  }, [])
 
 
   const [newName, setNewName] = useState('')
@@ -90,9 +88,12 @@ const App = () => {
     let findPerson = persons.find((person) => person.name === newName)
     if(findPerson===undefined){
       let newPerson = persons.concat({name:newName,number:newNumber})
-      setPersons(newPerson)
-      setNewName("")
-      setNewNumber("")
+      phoneServices.create({name:newName,number:newNumber}).then(response => {
+        setPersons(newPerson)
+        setNewName("")
+        setNewNumber("")
+      })
+     
     }
     else{
       alert(`${newName} is already added to phonebook`)
@@ -111,7 +112,6 @@ const App = () => {
       <Contacts persons={persons} newFilter={newFilter}/>
     </div>
   )
-
 }
 
 export default App
